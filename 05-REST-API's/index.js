@@ -3,7 +3,15 @@ const users = require("./MOCK_DATA.json")
 const app = express()
 const PORT = 8000
 
+// Middlewares -- Routes
 app.use(express.json())
+
+app.use((req , res , next)=>{
+    console.log("Hello from middleware 1");
+    next();
+})
+
+
 
 //  Routes 
 
