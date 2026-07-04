@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            margin: 0;
+            padding: 40px;
+        }
+        .box {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 24px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        input {
+            width: 70%;
+            padding: 10px;
+            margin-right: 8px;
+        }
+        button {
+            padding: 10px 14px;
+        }
+        .result {
+            margin-top: 12px;
+            color: green;
+        }
+        ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>Simple URL Shortener</h1>
+        <form id="shortenForm">
+            <input id="longUrl" type="text" placeholder="Enter your URL" required>
+            <button type="submit">Shorten</button>
+        </form>
+        <p id="message" class="result"></p>
+
+        <h3>Saved Links</h3>
+        <ul>
+            <% urls.forEach(function(item){ %>
+                <li>
+                    <a href="/<%= item.shortId %>" target="_blank">/<%= item.shortId %></a>
+                    - <%= item.redirectURL %>
+                </li>
+            <% }) %>
+        </ul>
+    </div>
+
+    <script>
+        const form = document.getElementById("shortenForm");
+        const input = document.getElementById("longUrl");
+        const message = document.getElementById("message");
+
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            message.textContent = "Working...";
+
+            const response = await fetch("/url", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: input.value })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                message.innerHTML = "Short URL: <a href=\"/" + data.id + "\" target=\"_blank\">/" + data.id + "</a>";
+                input.value = "";
+            } else {
+                message.textContent = data.error || "Something went wrong";
+            }
+        });
+    </script>
+</body>
+</html>
