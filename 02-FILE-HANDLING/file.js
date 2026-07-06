@@ -37,4 +37,10 @@ const fs = require("fs");
 
 console.log(fs.statSync("./test.txt"))
 
-fs.mkdirSync("Directory Name")
+try {
+  fs.mkdirSync("testDir")
+} catch (err) {
+  if (err.code !== 'EEXIST') {
+    console.log("Error creating directory:", err);
+  }
+}

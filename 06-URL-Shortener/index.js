@@ -2,7 +2,7 @@ const express = require("express")
 const urlRoute = require("./routes/url")
 const staticRouter = require("./routes/staticRouter")
 const {connectToMongoDB} = require("./connects")
-const cookies = require("cookies-parser")
+const cookieParser = require("cookie-parser")
 const path = require("path")
 const URL = require("./models/url")
 const {restrictToLoggedinUserOnly}   =  require("./middlewares/auth")
@@ -29,7 +29,7 @@ app.get("/test" , async (req , res) =>{
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookies());
+app.use(cookieParser());
 app.use("/", staticRouter);
 app.use('/url', urlRoute);
 app.use("/user", userRoute)
