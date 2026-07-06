@@ -1,0 +1,18 @@
+{
+  "name": "08-files-uploading",
+  "version": "1.0.0",
+  "description": "Simple file uploading project with Express, EJS, and Multer",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.22.2",
+    "multer": "^2.2.0"
+  }
+}
