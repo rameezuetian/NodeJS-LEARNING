@@ -1,0 +1,38 @@
+<%- include('./partials/head') %>
+<%- include('./partials/nav') %>
+
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+    <div class="auth-container glass-panel p-4 p-md-5">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold mb-2">Welcome Back</h2>
+            <p class="text-muted">Sign in to your Blogify account</p>
+        </div>
+
+        <% if (locals.error) { %>
+            <div class="alert alert-custom d-flex align-items-center" role="alert">
+                <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                <div><%= error %></div>
+            </div>
+        <% } %>
+
+        <form action="/user/signin" method="POST">
+            <div class="form-group-custom">
+                <label for="email" class="form-label-custom">Email Address</label>
+                <input type="email" class="form-control form-control-custom" id="email" name="email" required placeholder="name@example.com">
+            </div>
+
+            <div class="form-group-custom">
+                <label for="password" class="form-label-custom">Password</label>
+                <input type="password" class="form-control form-control-custom" id="password" name="password" required placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="btn btn-custom-primary w-100 mt-2 py-3">Sign In</button>
+        </form>
+
+        <div class="text-center mt-4">
+            <p class="mb-0 text-muted">Don't have an account? <a href="/user/signup" class="text-decoration-none" style="color: var(--color-primary); font-weight: 600;">Sign Up</a></p>
+        </div>
+    </div>
+</div>
+
+<%- include('./partials/footer') %>

@@ -1,0 +1,63 @@
+<%- include('./partials/head') %>
+<%- include('./partials/nav') %>
+
+<!-- Hero Banner -->
+<section class="hero-section">
+    <div class="container">
+        <h1 class="hero-title animate-fade-in">Write. Inspire. Share.</h1>
+        <p class="hero-subtitle">Discover perspectives from writers around the globe, or share your own thoughts and start building your audience today.</p>
+        <% if (!locals.user) { %>
+            <a href="/user/signup" class="btn btn-custom-primary btn-lg px-4 py-3">Get Started for Free</a>
+        <% } else { %>
+            <a href="/blog/add-new" class="btn btn-custom-primary btn-lg px-4 py-3"><i class="fa-solid fa-pen-nib me-2"></i>Publish a New Story</a>
+        <% } %>
+    </div>
+</section>
+
+<!-- Blog Feed -->
+<main class="container my-5">
+    <div class="d-flex align-items-center justify-content-between mb-5 border-bottom border-secondary pb-3">
+        <h2 class="fw-bold m-0"><i class="fa-solid fa-fire me-2" style="color: var(--color-accent);"></i>Latest Stories</h2>
+        <span class="badge bg-secondary px-3 py-2 fs-6"><%= blogs.length %> Posts</span>
+    </div>
+
+    <% if (blogs.length === 0) { %>
+        <div class="glass-panel p-5 text-center my-5">
+            <i class="fa-regular fa-folder-open display-1 mb-4 text-muted"></i>
+            <h3 class="fw-bold mb-3">No stories yet</h3>
+            <p class="text-secondary mb-4">The library is currently empty. Be the first to write and publish a story!</p>
+            <% if (locals.user) { %>
+                <a href="/blog/add-new" class="btn btn-custom-primary"><i class="fa-solid fa-plus me-2"></i>Create the first post</a>
+            <% } else { %>
+                <a href="/user/signin" class="btn btn-custom-primary"><i class="fa-solid fa-right-to-bracket me-2"></i>Sign in to start writing</a>
+            <% } %>
+        </div>
+    <% } else { %>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <% blogs.forEach(blog => { %>
+                <div class="col">
+                    <article class="glass-panel blog-card">
+                        <div class="blog-card-img-container">
+                            <img src="<%= blog.coverImageURL %>" alt="<%= blog.title %>" class="blog-card-img">
+                        </div>
+                        <div class="blog-card-body">
+                            <h3 class="blog-card-title">
+                                <a href="/blog/<%= blog._id %>" class="text-decoration-none text-white"><%= blog.title %></a>
+                            </h3>
+                            <p class="blog-card-text"><%= blog.body %></p>
+                            <div class="blog-card-footer">
+                                <div class="user-badge">
+                                    <img src="<%= blog.createdBy && blog.createdBy.profileImageURL ? blog.createdBy.profileImageURL : '/images/default.svg' %>" alt="" class="avatar-sm">
+                                    <span class="user-badge-name"><%= blog.createdBy ? blog.createdBy.fullName : 'Anonymous' %></span>
+                                </div>
+                                <a href="/blog/<%= blog._id %>" class="btn btn-sm btn-custom-secondary">Read <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+</main>
+
+<%- include('./partials/footer') %>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="coverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="50%" stop-color="#1E1B4B" />
+      <stop offset="100%" stop-color="#311042" />
+    </linearGradient>
+    <linearGradient id="shapeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#EC4899" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#F59E0B" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#coverGrad)"/>
+  
+  <!-- Abstract Shapes -->
+  <circle cx="200" cy="150" r="280" fill="url(#shapeGrad)" filter="blur(40px)"/>
+  <circle cx="650" cy="300" r="220" fill="url(#shapeGrad)" filter="blur(50px)"/>
+  
+  <path d="M-100,350 Q 200,200 400,380 T 900,250 L 900,450 L -100,450 Z" fill="#6366F1" fill-opacity="0.05"/>
+  <path d="M-100,380 Q 250,280 450,420 T 900,320 L 900,450 L -100,450 Z" fill="#EC4899" fill-opacity="0.04"/>
+
+  <!-- Logo/Text decoration -->
+  <text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle" font-family="'Outfit', sans-serif" font-size="48" font-weight="bold" fill="#ffffff" fill-opacity="0.15">
+    BLOGIFY
+  </text>
+  <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="'Inter', sans-serif" font-size="16" font-weight="normal" fill="#ffffff" fill-opacity="0.08">
+    Inspiration &amp; Knowledge
+  </text>
+</svg>

@@ -1,0 +1,96 @@
+<%- include('./partials/head') %>
+<%- include('./partials/nav') %>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <!-- Blog Cover & Header -->
+            <header class="blog-detail-header">
+                <img src="<%= blog.coverImageURL %>" alt="<%= blog.title %>" class="blog-detail-cover">
+                <div class="blog-detail-overlay">
+                    <h1 class="blog-detail-title"><%= blog.title %></h1>
+                    <div class="blog-detail-meta">
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="<%= blog.createdBy && blog.createdBy.profileImageURL ? blog.createdBy.profileImageURL : '/images/default.svg' %>" alt="" class="avatar-md">
+                            <div>
+                                <span class="d-block fw-semibold text-white"><%= blog.createdBy ? blog.createdBy.fullName : 'Anonymous' %></span>
+                                <span class="d-block text-muted" style="font-size: 0.85rem;"><%= blog.createdBy ? blog.createdBy.role : 'Member' %></span>
+                            </div>
+                        </div>
+                        <div>
+                            <i class="fa-regular fa-calendar me-2"></i>
+                            <%= blog.createdAt.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' }) %>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Blog Body -->
+            <article class="blog-detail-body px-md-3">
+                <!-- Convert line breaks to paragraphs/breaks to handle raw text content nicely -->
+                <% blog.body.split('\n').forEach(paragraph => { %>
+                    <% if (paragraph.trim()) { %>
+                        <p><%= paragraph %></p>
+                    <% } %>
+                <% }) %>
+            </article>
+
+            <!-- Comments Timeline -->
+            <section class="comments-section">
+                <h3 class="fw-bold mb-4">
+                    <i class="fa-regular fa-comments me-2 text-indigo"></i>Comments (<%= comments.length %>)
+                </h3>
+
+                <!-- Comment Input Form -->
+                <div class="glass-panel p-4 mb-5">
+                    <% if (locals.user) { %>
+                        <h5 class="fw-bold mb-3">Join the Discussion</h5>
+                        <form action="/blog/comment/<%= blog._id %>" method="POST">
+                            <div class="mb-3">
+                                <textarea class="form-control form-control-custom" name="content" rows="3" required placeholder="Write a supportive comment, ask a question, or share your thoughts..."></textarea>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-custom-primary"><i class="fa-solid fa-paper-plane me-2"></i>Submit Comment</button>
+                            </div>
+                        </form>
+                    <% } else { %>
+                        <div class="text-center py-2">
+                            <p class="text-secondary mb-3">You must be signed in to post a comment.</p>
+                            <a href="/user/signin" class="btn btn-custom-primary"><i class="fa-solid fa-right-to-bracket me-2"></i>Sign In to Comment</a>
+                        </div>
+                    <% } %>
+                </div>
+
+                <!-- Comments List -->
+                <div class="comments-list">
+                    <% if (comments.length === 0) { %>
+                        <div class="text-center py-4 text-secondary">
+                            <p class="mb-0">No comments yet. Be the first to start the conversation!</p>
+                        </div>
+                    <% } else { %>
+                        <% comments.forEach(comment => { %>
+                            <div class="comment-card">
+                                <div class="comment-header">
+                                    <div class="comment-user">
+                                        <img src="<%= comment.createdBy && comment.createdBy.profileImageURL ? comment.createdBy.profileImageURL : '/images/default.svg' %>" alt="" class="avatar-sm">
+                                        <div>
+                                            <span class="fw-semibold d-block" style="font-size: 0.95rem;"><%= comment.createdBy ? comment.createdBy.fullName : 'Anonymous' %></span>
+                                        </div>
+                                    </div>
+                                    <span class="comment-time">
+                                        <%= comment.createdAt.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" }) %>
+                                    </span>
+                                </div>
+                                <div class="comment-content">
+                                    <%= comment.content %>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } %>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<%- include('./partials/footer') %>

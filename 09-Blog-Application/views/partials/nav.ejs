@@ -1,0 +1,49 @@
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+    <div class="container">
+        <a class="navbar-brand navbar-brand-custom" href="/">
+            <i class="fa-solid fa-feather-pointed me-2"></i>Blogify
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link nav-link-custom" href="/"><i class="fa-solid fa-house me-1"></i> Home</a>
+                </li>
+                <% if (locals.user) { %>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" href="/blog/add-new"><i class="fa-solid fa-plus me-1"></i> Add Post</a>
+                    </li>
+                <% } %>
+            </ul>
+            <div class="d-flex align-items-center gap-3">
+                <% if (locals.user) { %>
+                    <div class="dropdown">
+                        <a class="d-flex align-items-center text-decoration-none dropdown-toggle text-white" href="#" role="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="<%= user.profileImageURL %>" alt="<%= user.fullName %>" class="avatar-nav me-2">
+                            <span class="d-none d-sm-inline fw-semibold"><%= user.fullName %></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark border-secondary bg-dark shadow" aria-labelledby="userMenu">
+                            <li><h6 class="dropdown-header"><%= user.email %></h6></li>
+                            <li><hr class="dropdown-divider border-secondary"></li>
+                            <li>
+                                <a class="dropdown-item py-2" href="/blog/add-new">
+                                    <i class="fa-solid fa-pen-nib me-2"></i>New Story
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-danger py-2" href="/user/logout">
+                                    <i class="fa-solid fa-right-from-bracket me-2"></i>Sign Out
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                <% } else { %>
+                    <a href="/user/signin" class="nav-link nav-link-custom">Sign In</a>
+                    <a href="/user/signup" class="nav-btn-primary text-decoration-none text-center">Sign Up</a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</nav>

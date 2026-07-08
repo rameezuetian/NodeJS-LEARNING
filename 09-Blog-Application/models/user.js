@@ -1,4 +1,4 @@
-const {Schema , Model} = require("mongoose");
+const {Schema , model} = require("mongoose");
 const {createHmac , randomBytes} = require("crypto");
 const {createTokenForUser}  = require("../service/authentication")
 const userSchema = new Schema({
@@ -20,7 +20,7 @@ const userSchema = new Schema({
     },
     profileImageURL:{
         type : String,
-        default : './images/default.png'
+        default : '/images/default.svg'
     },
     role:{
         type:String,
@@ -35,17 +35,15 @@ const userSchema = new Schema({
 
 )
 
-userSchema.pre('save' , function(next){
+userSchema.pre('save' , async function(){
     const user = this;
-    if(!user.isModified("password")) return ;
+    if(!user.isModified("password")) return;
 
-    const salt = randomBytes(16).toString();
+    const salt = randomBytes(16).toString("hex");
     const hashPassword = createHmac('sha256', salt).update(user.password).digest("hex");
 
     this.salt = salt;
     this.password = hashPassword;
-
-
 })
 
 
