@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple WebSocket Chat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+
+    form {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+    }
+
+    button {
+      padding: 10px 16px;
+      cursor: pointer;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>WebSocket Chat</h1>
+  <p>Open this page in two tabs and send messages.</p>
+
+  <ul id="messages"></ul>
+
+  <form id="chat-form">
+    <input id="message-input" type="text" placeholder="Type a message" required />
+    <button type="submit">Send</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const form = document.getElementById("chat-form");
+    const input = document.getElementById("message-input");
+    const messages = document.getElementById("messages");
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const message = input.value.trim();
+      if (!message) {
+        return;
+      }
+
+      socket.emit("user-message", message);
+      input.value = "";
+    });
+
+    socket.on("message", (message) => {
+      const item = document.createElement("li");
+      item.textContent = message;
+      messages.appendChild(item);
+    });
+  </script>
+</body>
+</html>

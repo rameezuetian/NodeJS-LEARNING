@@ -1,0 +1,17 @@
+{
+  "name": "10-websocket",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "express-status-monitor": "^1.3.4",
+    "socket.io": "^4.8.3"
+  }
+}
