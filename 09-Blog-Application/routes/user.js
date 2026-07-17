@@ -2,6 +2,16 @@ const { Router } = require("express");
 const User = require("../models/user");
 
 const router = Router();
+const isProduction = process.env.NODE_ENV === "production";
+
+function getAuthCookieOptions() {
+    return {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: isProduction,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    };
+}
 
 router.get("/signin", (req, res) => {
     return res.render("signin", { user: req.user });
@@ -15,7 +25,7 @@ router.post("/signin", async (req, res) => {
     const { email, password } = req.body;
     try {
         const token = await User.matchPasswordandGenerateToken(email, password);
-        return res.cookie("token", token).redirect("/");
+        return res.cookie("token", token, getAuthCookieOptions()).redirect("/");
     } catch (error) {
         console.error("Signin error:", error);
         return res.render("signin", {
@@ -35,7 +45,7 @@ router.post("/signup", async (req, res) => {
         });
         // Auto-login after sign up
         const token = await User.matchPasswordandGenerateToken(email, password);
-        return res.cookie("token", token).redirect("/");
+        return res.cookie("token", token, getAuthCookieOptions()).redirect("/");
     } catch (error) {
         console.error("Signup error:", error);
         return res.render("signup", {
@@ -46,7 +56,11 @@ router.post("/signup", async (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-    res.clearCookie("token").redirect("/");
+    res.clearCookie("token", {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: isProduction,
+    }).redirect("/");
 });
 
 module.exports = router;

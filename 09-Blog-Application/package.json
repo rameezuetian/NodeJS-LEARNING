@@ -6,9 +6,12 @@
   "author": "",
   "type": "commonjs",
   "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {  
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "dependencies": {
     "cookie-parser": "^1.4.6",

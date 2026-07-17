@@ -9,19 +9,22 @@ const { checkForAuthenticationCookie } = require("./middlewares/authentication")
 const Blog = require("./models/blog");
 
 const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/blogify";
+const isProduction = process.env.NODE_ENV === "production";
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/blogify')
-    .then(() => console.log("MongoDB Connected"))
-    .catch((err) => console.error("MongoDB Connection Error:", err));
+if (isProduction && !process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET must be set when NODE_ENV=production");
+}
 
 // View Engine Configuration
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
+app.set("trust proxy", 1);
 
 // Middlewares
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 app.use(cookieParser());
 app.use(checkForAuthenticationCookie("token"));
 
@@ -29,6 +32,10 @@ app.use(checkForAuthenticationCookie("token"));
 app.use(express.static(path.resolve("./public")));
 
 // Routes
+app.get("/health", (req, res) => {
+    return res.status(200).json({ status: "ok" });
+});
+
 app.get("/", async (req, res) => {
     try {
         const allBlogs = await Blog.find({}).sort({ createdAt: -1 }).populate("createdBy");
@@ -45,4 +52,16 @@ app.get("/", async (req, res) => {
 app.use("/user", userRouter);
 app.use("/blog", blogRouter);
 
-app.listen(PORT, () => console.log(`Server Started at PORT:${PORT}`));
+async function startServer() {
+    try {
+        await mongoose.connect(MONGODB_URI);
+        console.log("MongoDB Connected");
+
+        app.listen(PORT, () => console.log(`Server started at PORT:${PORT}`));
+    } catch (err) {
+        console.error("Failed to start application:", err);
+        process.exit(1);
+    }
+}
+
+startServer();
