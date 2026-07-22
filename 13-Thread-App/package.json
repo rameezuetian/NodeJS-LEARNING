@@ -1,0 +1,23 @@
+{
+  "name": "13-Thread-App",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.1.1",
+    "tsc-watch": "^7.2.1",
+    "typescript": "^7.0.2"
+  },
+  "scripts": {
+    "start": "node build/index.js",
+    "dev": "tsc-watch --onSuccess \"npm start\""
+  },
+  "dependencies": {
+    "@as-integrations/express5": "^1.1.2",
+    "@apollo/server": "^5.5.1",
+    "express": "^5.2.1",
+    "graphql": "16.11.0"
+  }
+}
