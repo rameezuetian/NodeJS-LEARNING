@@ -18,6 +18,9 @@ async function init() {
         hello: String
         say(name: String): String
       }
+        type mutation {
+        createUser(firstName : String! , lastName:String! , email :String! , password:String!)
+        }
     `,
     resolvers: {
       Query: {
@@ -25,6 +28,9 @@ async function init() {
         say: (_parent: unknown, { name }: QueryArgs) =>
           `Hey ${name ?? "there"}, how are you?`,
       },
+      Mutataion: {
+         createUser : async(_, {firstName , lastName ,email , password}:{firstName :String , lastName:String , email:string , password :String})=>{}
+      }
     },
   });
 
