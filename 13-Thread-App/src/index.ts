@@ -1,6 +1,7 @@
 import express from "express";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@as-integrations/express5";
+import type { User } from "@prisma/client";
 import { prisma } from "./lib/prisma.js";
 import {
   createAuthToken,
@@ -14,7 +15,7 @@ type QueryArgs = {
 };
 
 type AuthContext = {
-  userId: string | null;
+  user: User | null;
 };
 
 type SignUpArgs = {
@@ -34,7 +35,7 @@ type CreateThreadArgs = {
   content?: string;
 };
 
-function getUserIdFromRequest(request: express.Request) {
+async function getUserFromRequest(request: express.Request) {
   const authHeader = request.headers.authorization;
 
   if (!authHeader?.startsWith("Bearer ")) {
@@ -44,15 +45,21 @@ function getUserIdFromRequest(request: express.Request) {
   const token = authHeader.slice("Bearer ".length).trim();
   const payload = verifyAuthToken(token);
 
-  return payload?.sub ?? null;
+  if (!payload?.sub) {
+    return null;
+  }
+
+  return prisma.user.findUnique({
+    where: { id: payload.sub },
+  });
 }
 
 function requireUser(context: AuthContext) {
-  if (!context.userId) {
+  if (!context.user) {
     throw new Error("Authentication required");
   }
 
-  return context.userId;
+  return context.user;
 }
 
 async function init() {
@@ -103,15 +110,8 @@ async function init() {
         hello: () => "Hey there, I am a GraphQL server",
         say: (_parent: unknown, { name }: QueryArgs) =>
           `Hey ${name ?? "there"}, how are you?`,
-        me: async (_parent: unknown, _args: unknown, context: AuthContext) => {
-          if (!context.userId) {
-            return null;
-          }
-
-          return prisma.user.findUnique({
-            where: { id: context.userId },
-          });
-        },
+        me: (_parent: unknown, _args: unknown, context: AuthContext) =>
+          context.user,
         threads: async () =>
           prisma.thread.findMany({
             orderBy: { createdAt: "desc" },
@@ -169,13 +169,13 @@ async function init() {
           { title, content }: CreateThreadArgs,
           context: AuthContext,
         ) => {
-          const userId = requireUser(context);
+          const user = requireUser(context);
 
           return prisma.thread.create({
             data: {
               title: title.trim(),
               content: content?.trim() || null,
-              authorId: userId,
+              authorId: user.id,
             },
             include: { author: true },
           });
@@ -194,7 +194,7 @@ async function init() {
     "/graphql",
     expressMiddleware(gqlServer, {
       context: async ({ req }) => ({
-        userId: getUserIdFromRequest(req),
+        user: await getUserFromRequest(req),
       }),
     }),
   );
